@@ -90,31 +90,38 @@ class Game:
             try:
                 card1 = self.player1.move()
             except PlayerOutOfCardsException:
-                print("Player 1 has lost the game")
-                break
+                # print("Player 1 has lost the game")
+                return 2, step
 
             try:
                 card2 = self.player2.move()
             except PlayerOutOfCardsException:
-                print("Player 2 has lost the game")
-                break
+                # print("Player 2 has lost the game")
+                return 1, step
 
             bank.append(card1)
             bank.append(card2)
 
+            shuffle(bank)
+
             if card1 > card2:
                 self.player1.take(bank)
-                bank = []
             elif card2 > card1:
                 self.player2.take(bank)
-                bank = []
             elif card1 == card2:
                 continue
+            bank = []
 
         print(f"Number of steps: {step}")
 
 
 if __name__ == "__main__":
-    game = Game()
 
-    game.play()
+    results = []
+    for k in range(100000):
+        game = Game()
+        results.append(game.play())
+
+    wins = [r[0] for r in results]
+
+    print(wins.count(1), wins.count(2))
